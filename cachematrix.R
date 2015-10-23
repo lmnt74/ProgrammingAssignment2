@@ -1,41 +1,33 @@
 ##this file is create a Cache Matrix and then reference it back in the event that a matrix
 ##is already stored with the same name
 
-## this function caches the matrix
+## makeCacheMatrix is supposed to take a matrix and cache it
+
 makeCacheMatrix <- function(x = matrix()) {
     m <- NULL
-    ##set value of matrix
-    set <- function (y){
+    set <- function(y) {
         x <<- y
         m <<- NULL
     }
-    ##get value of matrix
     get <- function() x
-    ##set value of inverse
-    setInverse <- function(solve) {
-        m <<- sapply(x, FUN=solve, simplify = "array")
-    }
-    ##get value of inverse
-    getInverse <- function() m
+    setsolve <- function(solve) m <<- solve
+    getsolve <- function() m
     list(set = set, get = get,
-         setInverse = setInverse,
-         getInverse = getInverse)
+         setsolve = setsolve,
+         getsolve = getsolve)
 }
 
+## cacheSolve is supposed to inverse the function if it hasn't already been inversed
 
-##this function solves if there is already a cached version of this matrix
 cacheSolve <- function(x, ...) {
     ## Return a matrix that is the inverse of 'x'
-    m <- x$getInverse()
-    ## if cached, return message
-    if(!is.null(m)){
+    m <- x$getsolve()
+    if(!is.null(m)) {
         message("getting cached data")
         return(m)
     }
-    ##else below, if not cached
     data <- x$get()
-    ## solve
     m <- solve(data, ...)
-    x$setInverse(m)
+    x$setsolve(m)
     m
 }
